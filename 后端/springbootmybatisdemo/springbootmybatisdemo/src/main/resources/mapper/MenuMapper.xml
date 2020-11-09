@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyh.springbootmybatisdemo.mapper.MenuMapper">
+
+<!--    resultType可以把查询结果封装到pojo类型中，但必须pojo类的属性名和查询到的数据库表的字段名一致-->
+    <resultMap id="BaseResultMap" type="com.wyh.springbootmybatisdemo.pojo.MainMenu" >
+
+<!--        定义主键-->
+        <id column="id" property="id" />
+        <!--        定义普通属性-->
+<!--        property：在pojo中的属性名  column：在数据库中的列名-->
+        <result column="title" property="title" />
+        <result column="path" property="path" />
+
+<!--        映射分支导航-->
+       <collection property="sList" ofType="com.wyh.springbootmybatisdemo.pojo.SubMenu">
+           <!--        定义主键-->
+           <id column="sid" property="id" />
+           <!--        定义普通属性-->
+           <!--        property：在pojo中的属性名  column：在数据库中的列名-->
+           <result column="stitle" property="title" />
+           <result column="spath" property="path" />
+
+       </collection>
+
+
+    </resultMap>
+
+<!--    起别名sid,stitle,spath是为了在resultMap中方便区分，因为两个表的字段名相同-->
+
+    <select id="getMenus" resultMap="BaseResultMap">
+
+
+        select mm.*,sm.id as sid,sm.title as stitle,sm.path as spath
+        from mainmenu  mm ,submenu sm
+        WHERE mm.id = sm.mid
+    </select>
+
+</mapper>

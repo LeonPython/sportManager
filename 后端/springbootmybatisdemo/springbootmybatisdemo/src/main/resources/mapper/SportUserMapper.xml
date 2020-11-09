@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyh.springbootmybatisdemo.mapper.SportUserMapper">
+    <resultMap id="BaseResultMap" type="com.wyh.springbootmybatisdemo.pojo.SportUser" >
+
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="password" property="password" />
+        <result column="email" property="email" />
+        <result column="role" property="role" />
+        <result column="state" property="state" />
+
+
+    </resultMap>
+
+    <select id="getAllUser" resultMap="BaseResultMap">
+        select * from easyuser
+--         模糊查询，如果username这个参数不为空，则添加上where这个限制语句
+        <if test="username !=null">
+            where username like #{username}
+        </if>
+--         分页 百度分页公式  当前页的开始序号（不包括这一个本身）和一页最大的数据条数
+        limit #{pagestart},#{pagesize}
+
+    </select>
+    <select id="checkUser" resultMap="BaseResultMap">
+        select * from easyuser where username=#{username} and password=#{password} and state = 1;
+    </select>
+
+<!--    返回的是数量，所以用java.lang.Integer-->
+    <select id="getUserCounts" resultType="java.lang.Integer">
+        SELECT count(*) FROM `easyuser`
+        <if test="username !=null ">
+            WHERE username like #{username}
+        </if>
+    </select>
+
+    <update id="updateState">
+        update easyuser set state =#{state} where id = #{id}
+    </update>
+
+    <insert id="addNewUser">
+        INSERT INTO easyuser(username,password,email,role,state) VALUES(#{username},#{password},#{email},#{role},#{state})
+    </insert>
+    <delete id="deleteUser">
+        DELETE FROM easyuser WHERE id = #{id}
+    </delete>
+
+    <update id="editUser">
+        update easyuser set username =#{username},password =#{password},email =#{email} where id = #{id}
+    </update>
+
+</mapper>
